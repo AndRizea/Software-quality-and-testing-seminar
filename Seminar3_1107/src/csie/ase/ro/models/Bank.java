@@ -5,30 +5,23 @@ import csie.ase.ro.enums.AccountType;
 import java.util.HashMap;
 
 public class Bank {
-    String name;
-    int nextIBAN;
-    HashMap<String, BankAccount> accounts = new HashMap<>();
+    private String name;
+    private int nextIBAN;
+    private HashMap<String, BankAccount> accounts = new HashMap<>();
 
     public Bank(String name) {
         this.name = name;
         this.nextIBAN = 1;
     }
 
-    public BankAccount openAccount(AccountType type) {
+    public BankAccount openAccount(AccountType type, double initialBalance) {
         String nextIbanValue = this.name + (this.nextIBAN++);
-        BankAccount newAccount = null;
-        switch (type) {
-            case CREDIT:
-                newAccount = new CurrentAccount(nextIbanValue);
-                break;
-            case SAVINGS:
-                newAccount = new SavingsAccount(
-                        SavingsAccount.MIN_BALANCE, nextIbanValue);
-                break;
-            default:
-                throw new UnsupportedOperationException();
-        }
+        BankAccount newAccount = AccountFactory.createAccount(type, initialBalance, nextIbanValue);
         this.accounts.put(nextIbanValue, newAccount);
         return newAccount;
+    }
+
+    public BankAccount getAccount(String iban) {
+        return this.accounts.get(iban);
     }
 }

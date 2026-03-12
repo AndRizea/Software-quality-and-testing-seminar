@@ -15,4 +15,12 @@ public class SavingsAccount extends BankAccount {
             throw new InsufficientFundsException("No more money!");
         this.balance -= amount;
     }
+
+    @Override
+    public String toString() {
+        return "SavingsAccount [" +
+                "iban='" + iban + '\'' +
+                ", balance=" + balance +
+                ']';
+    }
 }
