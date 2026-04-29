@@ -1,0 +1,15 @@
+A smart home is naturally hierarchical: the house contains floors, floors contain rooms, and rooms contain devices (lights, thermostats, locks, speakers). Sometimes a room contains a sub-zone — a walk-in closet inside a bedroom, a reading nook inside a living room. The owner gives commands at any level: "turn off the whole house", "what's the kitchen consuming right now?", "list every device on the second floor".
+
+**R1 — The smart home should be able to handle groups of devices.**
+
+- multiple devices or rooms can be grouped together
+- groups can grow by including other groups or individual devices
+- some devices (hubs / scene controllers) can control whole groups
+
+Our smart home platform exposes a public SDK so third-party apps (mobile clients, voice assistants, automation services) can integrate with the home. Internally the SDK is huge: lighting controllers, HVAC drivers, security panels, multi-room audio engines — hundreds of classes, partially documented, with strict call-order requirements. Every third-party developer who tries to use the raw classes ends up writing the same 30 lines to "make the house sleep" — and getting it wrong half the time.
+
+**R2 — In order to allow other companies and developers to build external solutions that connect to the smart home, a library (an API) must be developed.**
+
+- the API contains many classes with many details
+- not all classes are documented
+- the API should provide a simplified interface for a set of basic functions
