@@ -1,0 +1,26 @@
+A game platform like StarForge runs maintenance tasks in the background while the player plays: nightly backups of save folders, patch updates pulled from the CDN, leaderboard sync, telemetry uploads, achievement reconciliation. These tasks should be queued (foreground gameplay never blocks), executed one at a time when the engine has a free slot, and trivial to add — every new module (Backup, Update, Telemetry, Achievements…) should slot in without touching the queue itself.
+
+**R1 — The platform must run async maintenance operations on different game modules without the engine knowing the details of each module.**
+
+- multiple modules (backup, update, …) need to run async work
+- the engine schedules the work; it does NOT know what each module does
+- new modules can be added later without changing the scheduler
+
+**R2 — The matchmaking module must support multiple matchmaking algorithms that can be selected and swapped at runtime without changing the module's code.**
+
+- multiple algorithms exist (skill-based, region-based, party-aware, ML-based, …)
+- the choice depends on queue type, A/B bucket, or runtime config
+- new algorithms must be addable without modifying the matchmaking module
+
+**R3 — The platform must let multiple modules react to game-state events (connection lost, match found, achievement unlocked, …) without the event source knowing which modules are listening.**
+
+- one source detects the event; many modules want to react
+- listeners can register / unregister at runtime
+- new listeners must be addable without modifying the event source
+
+**R4 — The platform must dispatch each alert to exactly one priority-tier handler, while letting cross-cutting handlers (anti-cheat, audit, telemetry) inspect the alert in passing.**
+
+- multiple handlers exist, each responsible for a tier or a cross-cutting concern
+- the sender doesn't know which handler will deal with the alert
+- new tiers / interceptors must be addable without modifying existing handlers
+- some handlers stop the chain (terminal); others process and forward (interceptor)
